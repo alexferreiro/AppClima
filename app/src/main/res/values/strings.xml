@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Clima</string>
+
+    <!-- Selection Screen -->
+    <string name="selection_title">How do you want to provide the location?</string>
+    <string name="selection_button_geolocation">Use my current location</string>
+    <string name="selection_button_coordinates">Enter coordinates</string>
+    <string name="selection_button_city">Enter city</string>
+
+    <!-- Coordinate Input Screen -->
+    <string name="coordinates_input_latitude_label">Latitude</string>
+    <string name="coordinates_input_longitude_label">Longitude</string>
+
+    <!-- City Input Screen -->
+    <string name="city_input_label">City Name</string>
+
+    <!-- Loading Screen -->
+    <string name="loading_message">Loading…</string>
+
+    <!-- Weather Display Screen -->
+    <string name="weather_display_city">City: %1$s</string>
+    <string name="weather_display_temperature">Temperature: %1$s°C</string>
+    <string name="weather_display_description">Weather: %1$s</string>
+    <string name="weather_display_back_button">Back to selection</string>
+    <string name="weather_description_not_available">N/A</string>
+
+    <!-- Error Screen -->
+    <string name="error_title">An error occurred:</string>
+    <string name="error_try_again_button">Try again</string>
+
+    <!-- Common Buttons -->
+    <string name="common_get_weather">Get Weather</string>
+    <string name="common_back">Back</string>
+
+    <!-- Status & Error Messages (for UI logic) -->
+    <string name="status_permission_granted_fetching">Permission granted. Fetching location…</string>
+    <string name="error_permission_denied">Location permission denied.</string>
+    <string name="error_location_failed">Failed to get location.</string>
+    <string name="error_invalid_coordinates">Invalid coordinates.</string>
+    <string name="error_fetch_weather">Failed to fetch weather: %1$s</string>
+    <string name="error_api_key">API key error. Please check your key in local.properties and that it is active.</string>
+    <string name="error_city_not_found">City not found. Please check the spelling.</string>
+    <string name="error_server">Server error. Please try again later.</string>
+    <string name="error_network_code">Network error: Code %1$s</string>
+    <string name="error_no_internet">No internet connection.</string>
+    <string name="error_unexpected">An unexpected error occurred: %1$s</string>
+    <string name="error_permission_not_granted_at_request">Permission not granted at the time of request.</string>
+    <string name="error_location_null">Failed to get location. Location is null.</string>
+    <string name="error_location_failure_generic">Failed to get location: %1$s</string>
+</resources>
