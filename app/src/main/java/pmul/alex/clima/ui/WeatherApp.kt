@@ -116,7 +116,7 @@ private fun Throwable.toUserFriendlyMessage(context: Context): String {
                 401 -> context.getString(R.string.error_api_key)
                 404 -> context.getString(R.string.error_city_not_found)
                 in 500..599 -> context.getString(R.string.error_server)
-                else -> context.getString(R.string.error_network_code, code())
+                else -> context.getString(R.string.error_network_code, code().toString())
             }
         }
         is java.net.UnknownHostException -> context.getString(R.string.error_no_internet)
