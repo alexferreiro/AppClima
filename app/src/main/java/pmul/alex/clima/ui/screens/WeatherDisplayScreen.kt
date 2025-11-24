@@ -1,12 +1,19 @@
 package pmul.alex.clima.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -20,121 +27,123 @@ import pmul.alex.clima.data.model.ForecastItem
 import pmul.alex.clima.data.model.ForecastResponse
 import pmul.alex.clima.data.model.WeatherResponse
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherDisplayScreen(weather: WeatherResponse, forecast: ForecastResponse, onBack: () -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.weather_display_city, weather.name)) },
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF87CEEB), // Sky Blue
+                        Color(0xFF4682B4)  // Steel Blue
+                    )
+                )
             )
-        },
-        bottomBar = {
-            BottomAppBar {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    Button(onClick = onBack) {
-                        Text(stringResource(R.string.weather_display_back_button))
-                    }
-                }
-            }
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            WeatherCard(weather)
-            Spacer(modifier = Modifier.height(24.dp))
-            ForecastSection(forecast)
-        }
-    }
-}
-
-@Composable
-fun WeatherCard(weather: WeatherResponse) {
-    Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize()
         ) {
-            // --- Icono y temperatura principal ---
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                val iconUrl = "https://openweathermap.org/img/wn/${weather.weather.firstOrNull()?.icon}@4x.png"
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(iconUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = weather.weather.firstOrNull()?.description,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(120.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = stringResource(R.string.weather_temp_celsius, weather.main.temp),
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            // --- Back Button ---
+            Row(modifier = Modifier.fillMaxWidth().padding(start = 4.dp)) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back_button_content_description), tint = Color.White)
+                }
             }
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()), // Makes the column scrollable
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = weather.weather.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "",
-                fontSize = 20.sp,
-                style = MaterialTheme.typography.titleMedium
-            )
+                // --- Main Weather Info ---
+                WeatherSummary(weather)
 
-            Spacer(modifier = Modifier.height(24.dp))
-            Divider()
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // --- Detalles adicionales ---
-            WeatherDetails(weather)
+                // --- Forecast ---
+                ForecastSection(forecast)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // --- Detailed Info Card ---
+                WeatherDetailsCard(weather)
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
 
 @Composable
-fun WeatherDetails(weather: WeatherResponse) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        DetailRow(
-            label = stringResource(R.string.weather_details_feels_like),
-            value = stringResource(R.string.weather_temp_celsius, weather.main.feelsLike)
+fun WeatherSummary(weather: WeatherResponse) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        val iconUrl = "https://openweathermap.org/img/wn/${weather.weather.firstOrNull()?.icon}@4x.png"
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(iconUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = weather.weather.firstOrNull()?.description,
+            modifier = Modifier.size(160.dp) // Large icon
         )
-        DetailRow(
-            label = stringResource(R.string.weather_details_min_max),
-            value = stringResource(R.string.weather_temp_min_max_celsius, weather.main.tempMin, weather.main.tempMax)
+
+        Text(
+            text = weather.name,
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
-        DetailRow(
-            label = stringResource(R.string.weather_details_humidity),
-            value = stringResource(R.string.weather_humidity_percentage, weather.main.humidity)
+        Text(
+            text = stringResource(R.string.weather_temp_celsius, weather.main.temp),
+            fontSize = 80.sp,
+            fontWeight = FontWeight.Light,
+            color = Color.White
         )
-        DetailRow(
-            label = stringResource(R.string.weather_details_wind),
-            value = stringResource(R.string.weather_wind_speed_ms, weather.wind.speed)
+        Text(
+            text = weather.weather.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "",
+            fontSize = 22.sp,
+            color = Color.White.copy(alpha = 0.8f)
         )
-        DetailRow(
-            label = stringResource(R.string.weather_details_visibility),
-            value = stringResource(R.string.weather_visibility_km, weather.visibility / 1000.0)
+        Text(
+            text = stringResource(R.string.weather_temp_min_max_celsius, weather.main.tempMin, weather.main.tempMax),
+            fontSize = 18.sp,
+            color = Color.White.copy(alpha = 0.8f)
         )
     }
 }
 
 @Composable
-fun DetailRow(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
-        Text(text = value, style = MaterialTheme.typography.bodyLarge)
+fun WeatherDetailsCard(weather: WeatherResponse) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.3f)),
+        shape = MaterialTheme.shapes.large
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            DetailItem(label = stringResource(R.string.weather_details_feels_like), value = stringResource(R.string.weather_temp_celsius, weather.main.feelsLike))
+            DetailItem(label = stringResource(R.string.weather_details_humidity), value = stringResource(R.string.weather_humidity_percentage, weather.main.humidity))
+            DetailItem(label = stringResource(R.string.weather_details_wind), value = stringResource(R.string.weather_wind_speed_ms, weather.wind.speed))
+        }
+    }
+}
+
+@Composable
+fun DetailItem(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = label, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+        Text(text = value, fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -143,13 +152,15 @@ fun ForecastSection(forecast: ForecastResponse) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.forecast_title),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
+            color = Color.White,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
         )
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp)
         ) {
-            items(forecast.list) { forecastItem ->
+            items(forecast.list.take(8)) { forecastItem -> // Show first 24h
                 ForecastItemView(item = forecastItem)
             }
         }
@@ -158,35 +169,33 @@ fun ForecastSection(forecast: ForecastResponse) {
 
 @Composable
 fun ForecastItemView(item: ForecastItem) {
-    // Solución simple y compatible para obtener la hora: "2023-10-27 18:00:00" -> "18"
     val hour = item.dateTime.substring(11, 13)
-
     Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.3f)),
+        shape = MaterialTheme.shapes.large
     ) {
         Column(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp), // More compact padding
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp) // Reduced spacing
         ) {
             Text(
                 text = stringResource(R.string.forecast_time_format, hour),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
             )
             val iconUrl = "https://openweathermap.org/img/wn/${item.weather.firstOrNull()?.icon}@2x.png"
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(iconUrl)
-                    .crossfade(true)
-                    .build(),
+                model = ImageRequest.Builder(LocalContext.current).data(iconUrl).crossfade(true).build(),
                 contentDescription = item.weather.firstOrNull()?.description,
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(40.dp) // Smaller icon for landscape
             )
             Text(
                 text = stringResource(R.string.weather_temp_celsius, item.main.temp),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
             )
         }
     }
