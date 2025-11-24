@@ -1,24 +1,23 @@
-package pmul.alex.clima.network
+package pmul.alex.clima.data.model
 
 import com.google.gson.annotations.SerializedName
 
-// Clase principal que engloba toda la respuesta
+// --- CLASES PARA EL CLIMA ACTUAL ---
+
 data class WeatherResponse(
     val weather: List<WeatherDescription>,
     val main: Main,
     val wind: Wind,
-    val visibility: Int, // en metros
+    val visibility: Int,
     val name: String
 )
 
-// Descripción principal del clima y el icono
 data class WeatherDescription(
-    val main: String, // Ej: "Clouds", "Rain"
-    val description: String, // Ej: "broken clouds"
-    val icon: String // Código del icono, ej: "04d"
+    val main: String,
+    val description: String,
+    val icon: String
 )
 
-// Contiene todos los datos principales de temperatura
 data class Main(
     val temp: Double,
     @SerializedName("feels_like") val feelsLike: Double,
@@ -27,7 +26,18 @@ data class Main(
     val humidity: Int
 )
 
-// Contiene los datos del viento
 data class Wind(
     val speed: Double
+)
+
+// --- CLASES PARA EL PRONÓSTICO ---
+
+data class ForecastResponse(
+    val list: List<ForecastItem>
+)
+
+data class ForecastItem(
+    val main: Main,
+    val weather: List<WeatherDescription>,
+    @SerializedName("dt_txt") val dateTime: String
 )

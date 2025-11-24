@@ -23,6 +23,18 @@
     <string name="weather_display_description">Weather: %1$s</string>
     <string name="weather_display_back_button">Back to selection</string>
     <string name="weather_description_not_available">N/A</string>
+    <string name="weather_details_feels_like">Feels like</string>
+    <string name="weather_details_min_max">Min / Max</string>
+    <string name="weather_details_humidity">Humidity</string>
+    <string name="weather_details_wind">Wind</string>
+    <string name="weather_details_visibility">Visibility</string>
+    <string name="forecast_title">5-Day Forecast</string>
+    <string name="weather_temp_celsius">%1$s°C</string>
+    <string name="weather_temp_min_max_celsius">%1$s°C / %2$s°C</string>
+    <string name="weather_humidity_percentage">%1$s%%</string>
+    <string name="weather_wind_speed_ms">%1$s m/s</string>
+    <string name="weather_visibility_km">%1$s km</string>
+    <string name="forecast_time_format">%1$s:00</string>
 
     <!-- Error Screen -->
     <string name="error_title">An error occurred:</string>
