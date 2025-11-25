@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Clima</string>
+    <string name="app_name">Weather Forecast</string>
+
+    <!-- Logo -->
+    <string name="logo_content_description">Weather Forecast Logo</string>
 
     <!-- Selection Screen -->
     <string name="selection_title">How do you want to provide the location?</string>
@@ -28,7 +31,7 @@
     <string name="weather_details_humidity">Humidity</string>
     <string name="weather_details_wind">Wind</string>
     <string name="weather_details_visibility">Visibility</string>
-    <string name="forecast_title">5-Day Forecast</string>
+    <string name="forecast_title">Today Forecast</string>
     <string name="weather_temp_celsius">%1$s°C</string>
     <string name="weather_temp_min_max_celsius">%1$s°C / %2$s°C</string>
     <string name="weather_humidity_percentage">%1$s%%</string>
